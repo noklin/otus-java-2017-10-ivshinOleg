@@ -73,8 +73,21 @@
                 </executions>
                 <configuration>
                     <options>
-                        <option>-keep class com.** { *; }</option>
-                        <option>-dontwarn</option>
+                        <option>-keep public class com.noklin.Launcher {public static void main(java.lang.String[]);}</option>
+                        <option>-verbose</option>
+                        <option>-keep class com.google.common.io.Resources { public static &lt;methods&gt;;}</option>
+                        <option>-keep class com.google.common.io.Resources { public static &lt;methods&gt;;}</option>
+                        <option>-keep class com.google.common.collect.Lists { public static ** reverse(**);}</option>
+                        <option>-keep class com.google.common.base.Charsets { public static &lt;fields&gt;;}</option>
+                        <option>-keep class com.google.common.base.Joiner { public static com.google.common.base.Joiner on(java.lang.String); public ** join(...);}</option>
+                        <option>-keep class com.google.common.collect.MapMakerInternalMap$ReferenceEntry</option>
+                        <option>-keep class com.google.common.cache.LocalCache$ReferenceEntry</option>
+                        <option>-dontwarn javax.annotation.**</option>
+                        <option>-dontwarn javax.inject.**</option>
+                        <option>-dontwarn sun.misc.Unsafe</option>
+                        <option>-dontwarn java.lang.ClassValue</option>
+                        <option>-dontwarn com.google.j2objc.annotations.Weak</option>
+                        <option>-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement</option>
                     </options>
                     <obfuscate>true</obfuscate>
                     <injar>${project.build.finalName}.jar</injar>

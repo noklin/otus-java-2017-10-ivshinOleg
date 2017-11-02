@@ -11,6 +11,7 @@
     <modules>
         <module>M1HomeWork1</module>
 		<module>M1HomeWork2</module>
+		<module>M1HomeWork3</module>
     </modules>
 
     <properties>
@@ -19,15 +20,13 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${version.junit}</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+ 
+    <dependencies>
+       <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies> 
 </project>

@@ -44,8 +44,7 @@ public class ATMTest {
 	@Test
 	public void test1() throws ATMServiceException{
 		int balance = majorMoneyATM.getBalance();
-		majorMoneyATM.getBucket(1).add(new Rub(1)); 
-		majorMoneyATM.deposit();
+		majorMoneyATM.deposit(new Rub(1));
 		assertTrue(test1AssertionMsg, majorMoneyATM.getBalance() == balance + 1);
 	}
 
@@ -57,41 +56,15 @@ public class ATMTest {
 		assertTrue(test2AssertionMsg, majorMoneyATM.getBalance() == balance - 1);
 	}
 	
-	private String test3AssertionMsg = "АТМ должен вернуть запрошенную сумму купюрами максимального номинала";
-	@Test
-	public void test3() throws ATMServiceException{
-		majorMoneyATM.withdraw(6666); 
-		assertTrue(test3AssertionMsg, majorMoneyATM.getBucket(5000).size() == 1);
-		assertTrue(test3AssertionMsg, majorMoneyATM.getBucket(1000).size() == 1);
-		assertTrue(test3AssertionMsg, majorMoneyATM.getBucket(500).size() == 1);
-		assertTrue(test3AssertionMsg, majorMoneyATM.getBucket(100).size() == 1);
-		assertTrue(test3AssertionMsg, majorMoneyATM.getBucket(50).size() == 1);
-		assertTrue(test3AssertionMsg, majorMoneyATM.getBucket(10).size() == 1);
-		assertTrue(test3AssertionMsg, majorMoneyATM.getBucket(1).size() == 6);
-	}
-
-	private String test4AssertionMsg = "АТМ должен принимать только подходящии по номиналу купюры в ячейках";
-	@Test
-	public void test4() throws ATMServiceException{  
-		int balance = majorMoneyATM.getBalance();
-		majorMoneyATM.getBucket(1).add(new Rub(1));
-		majorMoneyATM.getBucket(1).add(new Rub(10));
-		majorMoneyATM.getBucket(1).add(new Rub(500));
-		majorMoneyATM.getBucket(500).add(new Rub(500));
-		majorMoneyATM.deposit();
-		assertTrue(test4AssertionMsg, majorMoneyATM.getBalance() == balance + 500 + 1);
-	}
+ 
 	
 	private String test5AssertionMsg = "АТМ должен уметь востанавливать состояние инициализации после действий над ним";
 	@Test
 	public void test5() throws ATMServiceException{  
 		int balance = majorMoneyATM.getBalance();
-		majorMoneyATM.getBucket(1).add(new Rub(1));
-		majorMoneyATM.deposit();
+		majorMoneyATM.deposit(new Rub(1));
 		majorMoneyATM.withdraw(1000);
-		majorMoneyATM.getBucket(1000).remove(0);
-		majorMoneyATM.getBucket(5000).add(new Rub(5000));
-		majorMoneyATM.deposit();
+		majorMoneyATM.deposit(new Rub(5000));
 		majorMoneyATM.backToCreationState();
 		assertTrue(test5AssertionMsg, majorMoneyATM.getBalance() == balance);
 	}

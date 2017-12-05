@@ -2,8 +2,10 @@ package com.noklin.atm;
  
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Supplier; 
 
@@ -22,31 +24,19 @@ public class ATM<T extends Item>{
 	private Map<Integer,List<T>> itemPool = new TreeMap<>(DESC_ORDER);
 	private List<Operation<T>> operationHistory = new ArrayList<>(); 
 	
-	/**
-	 * Получить ячейку по номиналу
-	 * @param nominal - номинал ячейки
-	 * */
-	public Bucket<T> getBucket(Integer nominal){ 
-		return buckets.get(nominal);
-	}
-	
-	/**
-	 * Снять со счета.
-	 * @param howMuch - сколько снять
-	 * @throws ATMServiceException - если не получилось снять нужной суммы.
-	 * */
-	public void withdraw(int howMuch) throws ATMServiceException{ 
+	public Set<Item> withdraw(int howMuch) throws ATMServiceException{ 
+		Set<Item> result = new HashSet<>();
 		Operation<T> operation = new Withdraw<>(this, howMuch); 
 		operation.doOperaion();
 		operationHistory.add(operation); 
+		buckets.forEach((k,v)->{
+			v.forEach(result::add);
+		});
+		return result;
 	}
 
-	/**
-	 * Пополнить счет айтемами которые лежат в ячейках.
-	 * @throws ATMServiceException если не получилось пополнить счет.
-	 * */
-	public void deposit() throws ATMServiceException{ 
-		Operation<T> operation = new Deposit<>(this); 
+	public void deposit(T item) throws ATMServiceException{  
+		Operation<T> operation = new Deposit<>(this, item); 
 		operation.doOperaion();
 		operationHistory.add(operation); 
 	}

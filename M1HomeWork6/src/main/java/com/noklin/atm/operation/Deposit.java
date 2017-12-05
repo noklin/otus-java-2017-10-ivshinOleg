@@ -3,7 +3,6 @@ package com.noklin.atm.operation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.noklin.atm.ATM;
 import com.noklin.atm.ATM.Memento;
@@ -13,24 +12,22 @@ import com.noklin.atm.item.Item;
 
 public class Deposit<T extends Item> extends Operation<T>{
 
-	public Deposit(ATM<T> atm) {
+	private T item;
+	public Deposit(ATM<T> atm, T item) {
 		super(atm);
+		this.item = item;
 	}
 	
 	@Override
 	public void doOperaion() throws ATMServiceException {
 		ATM<T> atm = getAtm();
 		Memento<T> state = atm.getState();
-		Map<Integer,Bucket<T>> buckets = state.getBuckets();
-		buckets.entrySet().stream().forEach(entry -> {  
-			entry.getValue().stream()
-			.filter(item -> item.getNominal() == entry.getKey())
-			.collect(Collectors.toSet())
-			.forEach(item ->{
-				entry.getValue().remove(item);
-				addItem(state, item);
-			});
-		}); 
+		Map<Integer,Bucket<T>> buckets = state.getBuckets(); 
+		Bucket<T> bucket = buckets.get(item.getNominal());
+		if(bucket == null) {
+			throw new ATMServiceException("Item not supported");
+		}
+		addItem(state, item);
 		atm.setState(state);
 	}
 	

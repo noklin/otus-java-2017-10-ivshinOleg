@@ -28,7 +28,7 @@ public class ATMTest {
 				.addItem(new Rub(500)).addItem(new Rub(500)).addItem(new Rub(500)).addItem(new Rub(1))
 				.build();
 		
-		ATMDepartment<Money> depatrment = new ATMDepartment<>(Arrays.asList(atm1, atm2));
+		ATMDepartment depatrment = new ATMDepartment(Arrays.asList(atm1, atm2));
 		long totalBalaneceBeforeActions = depatrment.getTotalBalance();
 		
 		atm1.withdraw(5);

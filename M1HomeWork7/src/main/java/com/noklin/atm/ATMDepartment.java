@@ -1,30 +1,29 @@
 package com.noklin.atm;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import com.noklin.atm.exception.ATMServiceException;
-import com.noklin.atm.item.Item;
 
-public class ATMDepartment<T extends Item> extends ArrayList<ATM<T>>{
-	private static final long serialVersionUID = 1L;
+public class ATMDepartment{ 
 
 	public long getTotalBalance(){
 		long totalBalance= 0;
-		for(ATM<T> atm : this){
+		for(ATM<?> atm : atms){
 			totalBalance += atm.getBalance();
 		}
 		return totalBalance;
 	}
 	
 	public void backToCreationState() throws ATMServiceException{
-		for(ATM<T> atm : this){
+		for(ATM<?> atm : atms){
 			atm.backToCreationState();
 		}
 	} 
 	
 	public ATMDepartment(){}
-	public ATMDepartment(List<ATM<T>> list){
-		super(list);
+	public ATMDepartment(Collection<ATM<?>> atms){
+		this.atms = atms;
 	}
+	
+	private Collection<ATM<?>> atms;
 }

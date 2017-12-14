@@ -27,7 +27,7 @@ public class Launcher {
 		atm2.deposit(new Rub(500));
 		atm2.deposit(new Rub(500));
 		
-		ATMDepartment<Money> depatrment = new ATMDepartment<>(Arrays.asList(atm, atm2));
+		ATMDepartment depatrment = new ATMDepartment(Arrays.asList(atm, atm2));
 		System.out.println(depatrment);
 		System.out.println("total balance: " + depatrment.getTotalBalance());
 		depatrment.backToCreationState();

@@ -59,7 +59,7 @@ public class ATM<T extends Item>{
 	 * @throws ATMServiceException - если не получилось
 	 * */
 	public void backToCreationState() throws ATMServiceException{
-		int lastOperationIndex = operationHistory.size() - 1;
+		int lastOperationIndex = operationHistory.size();
 		while(lastOperationIndex --> 0){
 			operationHistory.get(lastOperationIndex).undoOperaion();
 		}

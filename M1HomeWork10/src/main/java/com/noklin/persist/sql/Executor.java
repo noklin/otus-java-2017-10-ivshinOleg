@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import com.noklin.persist.ConnectionFactory;
@@ -26,12 +27,17 @@ public class Executor {
 		return result;
 	}
 
-	public int executeUpdate(String query, List<TypedValue> fields) throws SQLException{
-		int result = 0;
+	public long executeUpdate(String query, List<TypedValue> fields) throws SQLException{
+		long result = 0;
 		try(Connection connection = ConnectionFactory.INSTANCE.getConnetion()){
-			try(PreparedStatement preparedStatement = connection.prepareStatement(query)){
+			try(PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 				setQueryParams(preparedStatement,fields);
 				result = preparedStatement.executeUpdate();
+				try(ResultSet generatedKeys = preparedStatement.getGeneratedKeys()){
+					if(generatedKeys.next()){
+						result = generatedKeys.getLong("GENERATED_KEY");
+					}
+				}
 			}
 		}
 		return result;
@@ -40,9 +46,12 @@ public class Executor {
 	private void setQueryParams(PreparedStatement preparedStatement, List<TypedValue> values) throws SQLException{
 		for(int i = 1 ; i <= values.size(); i++){
 			TypedValue value = values.get(i - 1);
-			setQueryParam(i, preparedStatement, value);
+			if(value.getType() != TypedValue.Type.COLLECTION){
+				setQueryParam(i, preparedStatement, value);
+			}
 		}
 	}
+	
 	private void setQueryParam(int index, PreparedStatement preparedStatement, TypedValue value) throws SQLException{
 		if(value.isNull()){
 			preparedStatement.setNull(index, value.getType().getSqlType());
@@ -55,9 +64,11 @@ public class Executor {
 				preparedStatement.setString(index, value.asString());
 				break;
 			case RELATION:
+				DataSet dataSet = value.asSomeType();
+				preparedStatement.setLong(index, dataSet.getId());
 				break;
 			default:
-				throw new RuntimeException("Unknown type: " + value.getType());
+				throw new RuntimeException("Unknown value type: " + value.getType());
 			}
 		}
 	}
